@@ -6,6 +6,7 @@ import {
 import * as fs from "fs";
 import * as assert from "assert";
 import * as crypto from "crypto";
+import * as path from "path";
 
 // final ABI object that will be serialized
 const ABI = {
@@ -112,8 +113,9 @@ try {
     }
   });
 
+  const outputFileName = path.parse(protoFileName).base.replace(".proto", "") + ".abi";
   const outputFile = new CodeGeneratorResponse.File();
-  outputFile.setName(protoFileName.replace('.proto', '') + ".abi");
+  outputFile.setName(outputFileName);
   outputFile.setContent(JSON.stringify(ABI, null, 4));
   codeGenResponse.addFile(outputFile);
 
