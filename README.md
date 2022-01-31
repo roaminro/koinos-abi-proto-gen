@@ -12,11 +12,12 @@ yarn add --dev koinos-abi-proto-gen
 
 ## Important note
 The plugin will generate an ABI method entry for all messages that follow the following rules:
-    - result messages must be name as `METHODNAME_result`
-    - arguments messages must be name as `METHODNAME_arguments`
-    - arguments messages must have a comment with the following information in it:
-- `@description` to indicate the ABI description for the method
-- `@read-only` to indicate the ABI read-only for the method
+
+  - result messages must be name as `METHODNAME_result`
+  - arguments messages must be name as `METHODNAME_arguments`
+  - arguments messages must have a comment with the following information in it:
+    - `@description` to indicate the ABI description for the method
+    - `@read-only` to indicate the ABI read-only for the method
 
 ## Usage
 
