@@ -44,7 +44,9 @@ message add_result {
 }
 ```
 
-will generate the following ABI file:
+will generate the following ABI files:
+
+A Koinos CLI compatible ABI file:
 ```json
 {
     "methods": {
@@ -56,6 +58,49 @@ will generate the following ABI file:
             "read-only": true
         }
     },
-    "types": "CipjYWxjdWxhdG9yL2Fzc2VtYmx5L3Byb3RvL0NhbGN1bGF0b3IucHJvdG8SCmNhbGN1bGF0b3IiKwoNYWRkX2FyZ3VtZW50cxIMCgF4GAEgASgDUgF4EgwKAXkYAiABKANSAXkiIgoKYWRkX3Jlc3VsdBIUCgV2YWx1ZRgBIAEoA1IFdmFsdWVKowIKBhIEAAAOAQoICgEMEgMAABIKCAoBAhIDAgATCjwKAgQAEgQHAAoBGjAgQGRlc2NyaXB0aW9uIEFkZCB0d28gaW50ZWdlcnMKIEByZWFkLW9ubHkgdHJ1ZQoKCgoDBAABEgMHCBUKCwoEBAACABIDCAIOCgwKBQQAAgAFEgMIAgcKDAoFBAACAAESAwgICQoMCgUEAAIAAxIDCAwNCgsKBAQAAgESAwkCDgoMCgUEAAIBBRIDCQIHCgwKBQQAAgEBEgMJCAkKDAoFBAACAQMSAwkMDQoKCgIEARIEDAAOAQoKCgMEAQESAwwIEgoLCgQEAQIAEgMNAhIKDAoFBAECAAUSAw0CBwoMCgUEAQIAARIDDQgNCgwKBQQBAgADEgMNEBFiBnByb3RvMw=="
+    "types": "ChBjYWxjdWxhdG9yLnByb3RvEgpjYWxjdWxhdG9yIisKDWFkZF9hcmd1bWVudHMSDAoBeBgBIAEoA1IBeBIMCgF5GAIgASgDUgF5IiIKCmFkZF9yZXN1bHQSFAoFdmFsdWUYASABKANSBXZhbHVlSqMCCgYSBAAADgEKCAoBDBIDAAASCggKAQISAwIAEwo8CgIEABIEBwAKARowIEBkZXNjcmlwdGlvbiBBZGQgdHdvIGludGVnZXJzCiBAcmVhZC1vbmx5IHRydWUKCgoKAwQAARIDBwgVCgsKBAQAAgASAwgCDgoMCgUEAAIABRIDCAIHCgwKBQQAAgABEgMICAkKDAoFBAACAAMSAwgMDQoLCgQEAAIBEgMJAg4KDAoFBAACAQUSAwkCBwoMCgUEAAIBARIDCQgJCgwKBQQAAgEDEgMJDA0KCgoCBAESBAwADgEKCgoDBAEBEgMMCBIKCwoEBAECABIDDQISCgwKBQQBAgAFEgMNAgcKDAoFBAECAAESAw0IDQoMCgUEAQIAAxIDDRARYgZwcm90bzM="
+}
+```
+
+A Koilib compatible ABI file:
+```json
+{
+    "methods": {
+        "add": {
+            "input": "calculator.add_arguments",
+            "output": "calculator.add_result",
+            "description": "Add two integers",
+            "entryPoint": 2124307139,
+            "readOnly": true
+        }
+    },
+    "types": {
+        "nested": {
+            "calculator": {
+                "nested": {
+                    "add_arguments": {
+                        "fields": {
+                            "x": {
+                                "type": "int64",
+                                "id": 1
+                            },
+                            "y": {
+                                "type": "int64",
+                                "id": 2
+                            }
+                        }
+                    },
+                    "add_result": {
+                        "fields": {
+                            "value": {
+                                "type": "int64",
+                                "id": 1
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
 }
 ```
