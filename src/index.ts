@@ -91,9 +91,9 @@ const generateJsonFileDescriptor = async (protoFilePath: string): Promise<string
     }
 
     const messageDescriptors = protoFileDescriptor.getMessageTypeList();
+
     for (let index = 0; index < messageDescriptors.length; index++) {
       const messageDescriptor = messageDescriptors[index];
-      // protoFileDescriptor.getMessageTypeList().forEach(async (messageDescriptor, index) => {
       const argumentsMessageName = messageDescriptor.getName();
 
       // only parse the messages ending with '_arguments'
