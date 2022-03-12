@@ -8,6 +8,7 @@ import * as assert from "assert";
 import * as crypto from "crypto";
 import * as path from "path";
 import * as pbjs from "protobufjs/cli/pbjs";
+import { exec } from "child_process";
 
 // final ABI object that will be serialized
 const ABI = {
@@ -19,6 +20,20 @@ const ABI = {
 const jsonABI = {
   methods: {},
   types: '',
+};
+
+const generateBinaryFileDescriptor = async (abiFileName: string, protoFilesPaths: string[]): Promise<string> => {
+  return new Promise((resolve, reject) => {
+    const pbFilePath = `./${abiFileName}.pb`;
+    const protocCmd = `protoc --descriptor_set_out=${pbFilePath} ${protoFilesPaths.join(' ')}`;
+    exec(protocCmd, (err) => {
+      if (err) reject(err);
+
+      const binaryFileDescriptor = fs.readFileSync(pbFilePath);
+
+      resolve(binaryFileDescriptor.toString('base64'));
+    });
+  });
 };
 
 const generateJsonFileDescriptor = async (protoFilePath: string): Promise<string> => {
@@ -35,44 +50,41 @@ const generateJsonFileDescriptor = async (protoFilePath: string): Promise<string
 };
 
 (async () => {
-
   const input = fs.readFileSync(process.stdin.fd);
 
   try {
     const codeGenRequest = CodeGeneratorRequest.deserializeBinary(input);
     const codeGenResponse = new CodeGeneratorResponse();
 
-    // there should be only 1 proto file
-    if (codeGenRequest.getFileToGenerateList().length !== 1) {
-      throw new Error("Only 1 proto file can be used to generate an ABI");
-    }
-
     codeGenResponse.setSupportedFeatures(
       CodeGeneratorResponse.Feature.FEATURE_PROTO3_OPTIONAL
     );
 
+    const protoFileNames = codeGenRequest.getFileToGenerateList();
     // there can be only 1 ABI file to generate, 
     // so the first file to generate is always the one used to generate the ABI
-    const protoFileName = codeGenRequest.getFileToGenerateList()[0];
+    const abiProtoFileName = protoFileNames[0];
+    const abiFileName = path.parse(abiProtoFileName).base.replace(".proto", "");
     let protoFileDescriptor;
-
+    
     // iterate over the proto files to find the one that will be used to generate the ABI
     for (const fileDescriptor of codeGenRequest.getProtoFileList()) {
       const fileDescriptorName = fileDescriptor.getName();
       assert.ok(fileDescriptorName);
-      if (fileDescriptorName === protoFileName) {
-        protoFileDescriptor = fileDescriptor;
-        ABI.types = Buffer.from(fileDescriptor.serializeBinary()).toString('base64');
+      if (protoFileNames.includes(fileDescriptorName)) {        
+        if (fileDescriptorName === abiProtoFileName) {
+          protoFileDescriptor = fileDescriptor;
+        } 
       }
     }
 
     if (!protoFileDescriptor) {
-      throw new Error(`Could not find a fileDescriptor for ${protoFileName}`);
+      throw new Error(`Could not find a fileDescriptor for ${abiProtoFileName}`);
     }
 
     const protoPackage = protoFileDescriptor.getPackage();
     if (!protoPackage) {
-      throw new Error(`Could not find a package in ${protoFileName}, this is required`);
+      throw new Error(`Could not find a package in ${abiProtoFileName}, this is required`);
     }
 
     const protoComments = new Map<string, string | undefined>();
@@ -145,19 +157,21 @@ const generateJsonFileDescriptor = async (protoFilePath: string): Promise<string
           readOnly: ABIReadOnly === 'true'
         };
 
-        const jsonDescriptor = await generateJsonFileDescriptor(protoFileName);
-
+        
+        ABI.types = await generateBinaryFileDescriptor(abiFileName, protoFileNames);
+        
+        const jsonDescriptor = await generateJsonFileDescriptor(abiProtoFileName);
         jsonABI.types = JSON.parse(jsonDescriptor);
       }
     }
 
-    const outputFileName = path.parse(protoFileName).base.replace(".proto", "") + ".abi";
+    const outputFileName = `${abiFileName}.abi`;
     const outputFile = new CodeGeneratorResponse.File();
     outputFile.setName(outputFileName);
     outputFile.setContent(JSON.stringify(ABI, null, 4));
     codeGenResponse.addFile(outputFile);
 
-    const jsonOutputFileName = path.parse(protoFileName).base.replace(".proto", "") + "-abi.json";
+    const jsonOutputFileName = `${abiFileName}-abi.json`;
     const jsonOutput = new CodeGeneratorResponse.File();
     jsonOutput.setName(jsonOutputFileName);
     jsonOutput.setContent(JSON.stringify(jsonABI, null, 4));

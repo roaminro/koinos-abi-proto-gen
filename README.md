@@ -13,6 +13,7 @@ yarn add --dev koinos-abi-proto-gen
 ## Important note
 The plugin will generate an ABI method entry for all messages that follow the following rules:
 
+  - the first proto file passed in the arguments of the plugin will be the proto file used to generate the ABI output files
   - result messages must be name as `METHODNAME_result`
   - arguments messages must be name as `METHODNAME_arguments`
   - arguments messages must have a comment with the following information in it:
