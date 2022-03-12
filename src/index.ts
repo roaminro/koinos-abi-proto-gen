@@ -8,7 +8,7 @@ import * as assert from "assert";
 import * as crypto from "crypto";
 import * as path from "path";
 import * as pbjs from "protobufjs/cli/pbjs";
-import { exec } from "child_process";
+import { execSync } from "child_process";
 
 // final ABI object that will be serialized
 const ABI = {
@@ -22,18 +22,14 @@ const jsonABI = {
   types: '',
 };
 
-const generateBinaryFileDescriptor = async (abiFileName: string, protoFilesPaths: string[]): Promise<string> => {
-  return new Promise((resolve, reject) => {
-    const pbFilePath = `./${abiFileName}.pb`;
-    const protocCmd = `protoc --descriptor_set_out=${pbFilePath} ${protoFilesPaths.join(' ')}`;
-    exec(protocCmd, (err) => {
-      if (err) reject(err);
+const generateBinaryFileDescriptor = (abiFileName: string, protoFilesPaths: string[]): string => {
+  const pbFilePath = `./${abiFileName}.pb`;
+  const protocCmd = `protoc --descriptor_set_out=${pbFilePath} ${protoFilesPaths.join(' ')}`;
+  execSync(protocCmd);
 
-      const binaryFileDescriptor = fs.readFileSync(pbFilePath);
+  const binaryFileDescriptor = fs.readFileSync(pbFilePath);
 
-      resolve(binaryFileDescriptor.toString('base64'));
-    });
-  });
+  return binaryFileDescriptor.toString('base64');
 };
 
 const generateJsonFileDescriptor = async (protoFilePath: string): Promise<string> => {
@@ -66,15 +62,15 @@ const generateJsonFileDescriptor = async (protoFilePath: string): Promise<string
     const abiProtoFileName = protoFileNames[0];
     const abiFileName = path.parse(abiProtoFileName).base.replace(".proto", "");
     let protoFileDescriptor;
-    
+
     // iterate over the proto files to find the one that will be used to generate the ABI
     for (const fileDescriptor of codeGenRequest.getProtoFileList()) {
       const fileDescriptorName = fileDescriptor.getName();
       assert.ok(fileDescriptorName);
-      if (protoFileNames.includes(fileDescriptorName)) {        
+      if (protoFileNames.includes(fileDescriptorName)) {
         if (fileDescriptorName === abiProtoFileName) {
           protoFileDescriptor = fileDescriptor;
-        } 
+        }
       }
     }
 
@@ -157,9 +153,9 @@ const generateJsonFileDescriptor = async (protoFilePath: string): Promise<string
           readOnly: ABIReadOnly === 'true'
         };
 
-        
-        ABI.types = await generateBinaryFileDescriptor(abiFileName, protoFileNames);
-        
+
+        ABI.types = generateBinaryFileDescriptor(abiFileName, protoFileNames);
+
         const jsonDescriptor = await generateJsonFileDescriptor(abiProtoFileName);
         jsonABI.types = JSON.parse(jsonDescriptor);
       }
