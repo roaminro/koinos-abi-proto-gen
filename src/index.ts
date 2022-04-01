@@ -32,9 +32,9 @@ const generateBinaryFileDescriptor = (abiFileName: string, protoFilesPaths: stri
   return binaryFileDescriptor.toString('base64');
 };
 
-const generateJsonFileDescriptor = async (protoFilePath: string): Promise<string> => {
+const generateJsonFileDescriptor = async (protoFilesPaths: string[]): Promise<string> => {
   return new Promise((resolve, reject) => {
-    pbjs.main(["--target", "json", protoFilePath], (err, output) => {
+    pbjs.main(["--target", "json", ...protoFilesPaths], (err, output) => {
       if (err) reject(err);
       if (output) {
         resolve(output);
@@ -156,7 +156,7 @@ const generateJsonFileDescriptor = async (protoFilePath: string): Promise<string
 
         ABI.types = generateBinaryFileDescriptor(abiFileName, protoFileNames);
 
-        const jsonDescriptor = await generateJsonFileDescriptor(abiProtoFileName);
+        const jsonDescriptor = await generateJsonFileDescriptor(protoFileNames);
         jsonABI.types = JSON.parse(jsonDescriptor);
       }
     }
