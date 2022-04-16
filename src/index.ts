@@ -168,7 +168,7 @@ const generateJsonFileDescriptor = async (protoFilesPaths: string[]): Promise<st
           };
 
           // @ts-ignore: using ABIMethodName as index of the object
-          ABI.methods['authorize'] = {
+          jsonABI.methods['authorize'] = {
             input: 'koinos.chain.authorize_arguments',
             output: 'koinos.chain.authorize_result',
             description: 'Check if authorized',
@@ -176,7 +176,6 @@ const generateJsonFileDescriptor = async (protoFilesPaths: string[]): Promise<st
             "read-only": 'false'
           };
         }
-
 
         ABI.types = generateBinaryFileDescriptor(abiFileName, protoFileNames);
 
