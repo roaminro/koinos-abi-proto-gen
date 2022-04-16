@@ -164,7 +164,7 @@ const generateJsonFileDescriptor = async (protoFilesPaths: string[]): Promise<st
             return: 'koinos.chain.authorize_result',
             description: 'Check if authorized',
             entry_point: authorizeABIEntryPoint,
-            "read-only": 'false'
+            "read-only": false
           };
 
           // @ts-ignore: using ABIMethodName as index of the object
@@ -173,7 +173,7 @@ const generateJsonFileDescriptor = async (protoFilesPaths: string[]): Promise<st
             output: 'koinos.chain.authorize_result',
             description: 'Check if authorized',
             entryPoint: parseInt(authorizeABIEntryPoint, 16),
-            "read-only": 'false'
+            "read-only": false
           };
         }
 
