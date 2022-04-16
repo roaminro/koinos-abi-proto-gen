@@ -158,14 +158,6 @@ const generateJsonFileDescriptor = async (protoFilesPaths: string[]): Promise<st
         // if need to generate authorize entry point
         if (GENERATE_AUTHORIZE_ENTRY_POINT) {
           const authorizeABIEntryPoint = `0x${crypto.createHash('sha256').update('authorize').digest('hex')}`.slice(0, 10);
-          // @ts-ignore: using ABIMethodName as index of the object
-          ABI.methods['authorize'] = {
-            argument: 'koinos.chain.authorize_arguments',
-            return: 'koinos.chain.authorize_result',
-            description: 'Check if authorized',
-            entry_point: authorizeABIEntryPoint,
-            "read-only": false
-          };
 
           // @ts-ignore: using ABIMethodName as index of the object
           jsonABI.methods['authorize'] = {
