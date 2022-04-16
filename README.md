@@ -24,6 +24,9 @@ The plugin will generate an ABI method entry for all messages that follow the fo
 
 ```sh
 protoc --plugin=protoc-gen-abi=./node_modules/.bin/koinos-abi-proto-gen --abi_out=. myProtoFile.proto
+
+// you can generate the "authorize" entry point by setting the GENERATE_AUTHORIZE_ENTRY_POINT env variable
+GENERATE_AUTHORIZE_ENTRY_POINT=1 protoc --plugin=protoc-gen-abi=./node_modules/.bin/koinos-abi-proto-gen --abi_out=. myProtoFile.proto koinos/chain/authority.proto
 ```
 
 ## Example
