@@ -109,7 +109,7 @@ const generateJsonFileDescriptor = async (protoFilesPaths: string[]): Promise<st
       // only parse the messages ending with '_arguments'
       if (argumentsMessageName?.endsWith('_arguments')) {
         const ABIMethodName = argumentsMessageName.replace('_arguments', '');
-        const resultMessageName = `${ABIMethodName}_result`;
+        let resultMessageName = `${ABIMethodName}_result`;
         const commentsStr = protoComments.get(`4.${index}`);
 
         if (!commentsStr) {
@@ -124,6 +124,8 @@ const generateJsonFileDescriptor = async (protoFilesPaths: string[]): Promise<st
             ABIDescritpion = comment.replace('@description', '').trim();
           } else if (comment.includes('@read-only')) {
             ABIReadOnly = comment.replace('@read-only', '').trim();
+          } else if (comment.includes('@result')) {
+            resultMessageName = comment.replace('@result', '').trim();
           }
         });
 
