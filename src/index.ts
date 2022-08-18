@@ -1,4 +1,4 @@
-// 
+//
 import {
   CodeGeneratorRequest,
   CodeGeneratorResponse,
@@ -59,7 +59,7 @@ const generateJsonFileDescriptor = async (protoFilesPaths: string[]): Promise<st
     );
 
     const protoFileNames = codeGenRequest.getFileToGenerateList();
-    // there can be only 1 ABI file to generate, 
+    // there can be only 1 ABI file to generate,
     // so the first file to generate is always the one used to generate the ABI
     const abiProtoFileName = protoFileNames[0];
     const abiFileName = path.parse(abiProtoFileName).base.replace(".proto", "");
@@ -144,7 +144,7 @@ const generateJsonFileDescriptor = async (protoFilesPaths: string[]): Promise<st
           argument: `${protoPackage}.${argumentsMessageName}`,
           return: `${protoPackage}.${resultMessageName}`,
           description: ABIDescritpion,
-          entry_point: ABIEntryPoint,
+          "entry-point": ABIEntryPoint,
           "read-only": ABIReadOnly === 'true'
         };
 
