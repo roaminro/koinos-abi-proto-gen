@@ -1,5 +1,5 @@
 {
-  "name": "koinos-abi-proto-gen",
+  "name": "@koinos/abi-proto-gen",
   "version": "0.1.11",
   "license": "MIT",
   "main": "lib/index.js",
