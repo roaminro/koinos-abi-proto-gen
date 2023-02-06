@@ -36,7 +36,7 @@ const generateBinaryFileDescriptor = (abiFileName: string, protoFilesPaths: stri
 
 const generateJsonFileDescriptor = async (protoFilesPaths: string[]): Promise<string> => {
   return new Promise((resolve, reject) => {
-    pbjs.main(["--target", "json", ...protoFilesPaths], (err, output) => {
+    pbjs.main(["--keep-case", "--target", "json", ...protoFilesPaths], (err, output) => {
       if (err) reject(err);
       if (output) {
         resolve(output);
