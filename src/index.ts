@@ -36,7 +36,7 @@ const generateBinaryFileDescriptor = (abiFileName: string, protoFilesPaths: stri
 
 const generateJsonFileDescriptor = async (protoFilesPaths: string[]): Promise<string> => {
   return new Promise((resolve, reject) => {
-    pbjs.main(["--target", "json", ...protoFilesPaths], (err, output) => {
+    pbjs.main(["--keep-case", "--target", "json", ...protoFilesPaths], (err, output) => {
       if (err) reject(err);
       if (output) {
         resolve(output);
@@ -150,11 +150,11 @@ const generateJsonFileDescriptor = async (protoFilesPaths: string[]): Promise<st
 
         // @ts-ignore: using ABIMethodName as index of the object
         jsonABI.methods[ABIMethodName] = {
-          input: `${protoPackage}.${argumentsMessageName}`,
-          output: `${protoPackage}.${resultMessageName}`,
+          argument: `${protoPackage}.${argumentsMessageName}`,
+          return: `${protoPackage}.${resultMessageName}`,
           description: ABIDescritpion,
-          entryPoint: parseInt(ABIEntryPoint, 16),
-          readOnly: ABIReadOnly === 'true'
+          entry_point: parseInt(ABIEntryPoint, 16),
+          read_only: ABIReadOnly === 'true'
         };
 
         // if need to generate authorize entry point
@@ -163,11 +163,11 @@ const generateJsonFileDescriptor = async (protoFilesPaths: string[]): Promise<st
 
           // @ts-ignore: using ABIMethodName as index of the object
           jsonABI.methods['authorize'] = {
-            input: 'koinos.chain.authorize_arguments',
-            output: 'koinos.chain.authorize_result',
+            argument: 'koinos.chain.authorize_arguments',
+            return: 'koinos.chain.authorize_result',
             description: 'Check if authorized',
-            entryPoint: parseInt(authorizeABIEntryPoint, 16),
-            "read-only": false
+            entry_point: parseInt(authorizeABIEntryPoint, 16),
+            read_only: false
           };
         }
 
