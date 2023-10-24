@@ -7,7 +7,7 @@ import * as fs from "fs";
 import * as assert from "assert";
 import * as crypto from "crypto";
 import * as path from "path";
-import * as pbjs from "protobufjs/cli/pbjs";
+import { pbjs } from "protobufjs-cli";
 import { execSync } from "child_process";
 
 const { GENERATE_AUTHORIZE_ENTRY_POINT } = process.env;
@@ -26,7 +26,7 @@ const jsonABI = {
 
 const generateBinaryFileDescriptor = (abiFileName: string, protoFilesPaths: string[]): string => {
   const pbFilePath = `./${abiFileName}.pb`;
-  const protocCmd = `protoc --descriptor_set_out=${pbFilePath} ${protoFilesPaths.join(' ')}`;
+  const protocCmd = `protoc --experimental_allow_proto3_optional --descriptor_set_out=${pbFilePath} ${protoFilesPaths.join(' ')}`;
   execSync(protocCmd);
 
   const binaryFileDescriptor = fs.readFileSync(pbFilePath);
