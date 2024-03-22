@@ -3,7 +3,8 @@
   "version": "1.0.2",
   "license": "MIT",
   "main": "lib/index.js",
-  "author": "Koinos Group <contact@koinos.group>",
+  "author": "Roamin Ro",
+  "contributors": ["Koinos Group <contact@koinos.group>"],
   "repository": "https://github.com/koinos/koinos-abi-proto-gen",
   "tags": [
     "protobuf",
