@@ -1,10 +1,11 @@
 {
-  "name": "@koinos/abi-proto-gen",
+  "name": "@roamin/koinos-abi-proto-gen",
   "version": "1.0.2",
   "license": "MIT",
   "main": "lib/index.js",
-  "author": "Koinos Group <contact@koinos.group>",
-  "repository": "https://github.com/koinos/koinos-abi-proto-gen",
+  "author": "Roamin Ro",
+  "contributors": ["Koinos Group <contact@koinos.group>"],
+  "repository": "https://github.com/roaminro/koinos-abi-proto-gen",
   "tags": [
     "protobuf",
     "proto",
